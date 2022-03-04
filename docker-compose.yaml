@@ -1,0 +1,41 @@
+version: '3.5'
+
+volumes:
+  postgres:
+
+services:
+  database:
+    image: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=todo
+      - POSTGRES_USER=todo
+      - POSTGRES_PASSWORD=todo
+    ports:
+      - 54322:5432
+
+  primary:
+    image: todo:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      bash -c "
+        python -m pip install -r requirements.txt &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+    env_file: .env
+    environment:
+      - POSTGRES_HOSTNAME=database
+      - POSTGRES_PORT=5432
+    depends_on:
+      - database
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    volumes:
+      - .:/app
+      - ./etc/emails/:/tmp/emails/
