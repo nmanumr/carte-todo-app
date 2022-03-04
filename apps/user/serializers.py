@@ -5,7 +5,7 @@ from apps.user.models import User
 
 
 class AuthenticateUserSerializer(serializers.Serializer):
-    email = serializers.EmailField(max_length=64, trim_whitespace=False)
+    username = serializers.CharField(max_length=64, trim_whitespace=False)
     password = serializers.CharField(max_length=64, trim_whitespace=False)
 
     def validate(self, attrs):
