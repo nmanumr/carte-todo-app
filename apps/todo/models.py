@@ -1,16 +1,17 @@
 from django.db import models
 
 from apps.user.models import User
+from todo.ext.public_model import PublicModel
 
 
-class TaskLabel(models.Model):
+class TaskLabel(PublicModel):
     title = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
 
 
-class UserTask(models.Model):
+class UserTask(PublicModel):
     PRIORITY_CHOICES = (
         ('HI', 'High'),
         ('MD', 'Medium'),

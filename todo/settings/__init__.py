@@ -5,6 +5,7 @@ from .database import *
 from .drf import *
 from .host import *
 from .logging import *
+from .static import *
 from .templates import *
 
 # Delayed configuration

@@ -1,5 +1,3 @@
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'sessions'
 CSRF_USE_SESSIONS = True
 
 AUTH_PASSWORD_VALIDATORS = [
