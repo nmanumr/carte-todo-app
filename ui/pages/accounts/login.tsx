@@ -40,8 +40,8 @@ export default function Login() {
     <AuthLayout>
       <Form onSubmit={onSubmit} className="space-y-4">
 
-        <InputFormField name="username" type="text" label="Username" autoComplete="username" />
-        <InputFormField name="password" type="password" label="Password" autoComplete="current-password" />
+        <InputFormField name="username" type="text" label="Username" autoComplete="username" required />
+        <InputFormField name="password" type="password" label="Password" autoComplete="current-password" required />
 
         <div className="flex items-center">
           <div className="text-sm">

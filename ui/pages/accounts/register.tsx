@@ -23,8 +23,8 @@ export default function Register() {
   const onSubmit = async (value: Record<string, any>, form: UseFormReturn) => {
     setApiError('');
 
-    if (value.password !== value.confirmPassword) {
-      form.setError('confirmPassword', { message: "Password doesn't match" });
+    if (value.password !== value.password2) {
+      form.setError('password2', { message: "Password doesn't match" });
       return;
     }
 
@@ -52,10 +52,10 @@ export default function Register() {
     <AuthLayout>
       <Form onSubmit={onSubmit} className="space-y-4">
 
-        <InputFormField name="username" type="text" label="Username" autoComplete="username" />
-        <InputFormField name="email" type="email" label="Email" autoComplete="email" />
-        <InputFormField name="password" type="password" label="Password" autoComplete="new-password" />
-        <InputFormField name="password2" type="password" label="Confirm Password" autoComplete="new-password" />
+        <InputFormField name="username" type="text" label="Username" autoComplete="username" required />
+        <InputFormField name="email" type="email" label="Email" autoComplete="email" required />
+        <InputFormField name="password" type="password" label="Password" autoComplete="new-password" required />
+        <InputFormField name="password2" type="password" label="Confirm Password" autoComplete="new-password" required />
 
         {apiError && <ErrorMessage error={apiError} />}
 

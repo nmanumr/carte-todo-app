@@ -1,0 +1,18 @@
+FROM python:3.8-slim as base
+
+FROM base as deps
+
+WORKDIR /todo
+
+COPY requirements.txt .
+RUN pip install --user -r requirements.txt
+
+FROM base
+
+COPY --from=deps /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+WORKDIR /todo
+COPY . .
+
+CMD python manage.py migrate; python manage.py collectstatic; daphne -b 0.0.0.0 -p 8000 todo.asgi:application

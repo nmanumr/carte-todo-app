@@ -1,11 +1,9 @@
-import axios from 'axios';
-import React, { KeyboardEventHandler, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   useForm, FormProvider, useFormContext,
   Mode, UseFormReturn, FieldError,
   UseFormRegisterReturn,
 } from 'react-hook-form';
-import { formatRequestError } from './ErrorMessage';
 
 interface FormProps {
   mode?: Mode;
@@ -17,28 +15,27 @@ interface FormProps {
 }
 
 export interface FormInputProps {
-  name: string,
-  label?: string,
-  required?: boolean,
-  type?: string,
-  pattern?: RegExp,
-  minLength?: number,
-  maxLength?: number,
-  onChange?: (e: {target: any, type?: any}, form: UseFormReturn) => void,
+  name: string;
+  label?: string;
+  required?: boolean;
+  type?: string;
+  pattern?: RegExp;
+  minLength?: number;
+  maxLength?: number;
+  onChange?: (e: { target: any, type?: any }, form: UseFormReturn) => void;
 }
 
 export interface FormInputFuncProps extends UseFormRegisterReturn {
   label: string;
-  errors: FieldError
+  errors: FieldError;
 }
-export function Form(props: React.PropsWithChildren<FormProps>) {
-  const mode = props.mode || 'onSubmit';
-  const criteriaMode = props.criteriaMode || 'all';
-  const reValidateMode = props.reValidateMode || 'onChange';
-  const {
-    model, onSubmit, children, className,
-  } = props;
 
+export function Form({
+  model, onSubmit, children, className,
+  mode = 'onSubmit',
+  criteriaMode = 'all',
+  reValidateMode = 'onChange',
+}: React.PropsWithChildren<FormProps>) {
   const form = useForm({
     mode, reValidateMode, defaultValues: model, criteriaMode,
   });

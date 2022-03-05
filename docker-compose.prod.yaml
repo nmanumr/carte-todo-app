@@ -1,0 +1,44 @@
+version: "3.5"
+
+volumes:
+  postgres:
+
+networks:
+  backend:
+
+services:
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  server:
+    image: rashcam
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    env_file: .env
+    environment:
+      - POSTGRES_HOSTNAME=database
+      - POSTGRES_PORT=5432
+      - DJANGO_DEBUG=False
+    depends_on:
+      - database
+    networks:
+      - backend
+    ports:
+      - "4000:8000"
+
+  webapp:
+    image: rashcam-ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - "4001:3000"

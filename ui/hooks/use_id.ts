@@ -1,22 +1,13 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 
-import useServerHandoffComplete from './use_server_handoff_complete';
-import useIsoMorphicEffect from './use_isomorphic_effect';
-
-let id = 0;
-
-function generateId() {
-  id += 1;
-  return id;
+export function randomId() {
+  return `${Math.random().toString(36).substring(2, 9)}`;
 }
 
-export default function useId() {
-  const ready = useServerHandoffComplete();
-  const [_id, setId] = useState(ready ? generateId : null);
-
-  useIsoMorphicEffect(() => {
-    if (_id === null) setId(generateId());
-  }, [_id]);
-
-  return `${_id}`;
+/**
+ * react 18 has builtin useId hook but until then just copied it from mantine
+ */
+export default function useId(id?: string, generateId: () => string = randomId) {
+  const generatedId = useRef(generateId());
+  return id || generatedId.current;
 }

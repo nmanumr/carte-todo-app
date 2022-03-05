@@ -1,8 +1,9 @@
+import c from 'classnames';
+import useSWR from 'swr';
 import { Fragment } from 'react';
 import { useRouter } from 'next/router';
 import { Menu, Transition } from '@headlessui/react';
-import c from 'classnames';
-import useSWR from 'swr';
+
 import { setToken } from '../providers/auth';
 import UserAvatar from './UserAvatar';
 

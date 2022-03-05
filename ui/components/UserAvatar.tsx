@@ -2,12 +2,14 @@ import c from 'classnames';
 import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/avatars-initials-sprites';
 
-export default function UserAvatar({
-  user: { username, avatar }, classNames,
-}: {
+interface Props {
   user: { username: string, avatar: string };
   classNames: string;
-}) {
+}
+
+export default function UserAvatar({
+  user: { username, avatar }, classNames,
+}: Props) {
   if (!avatar) {
     const svg = createAvatar(style, { seed: username });
 

@@ -1,4 +1,5 @@
-import Link, {LinkProps} from 'next/link';
+import { PropsWithChildren } from 'react';
+import Link, { LinkProps } from 'next/link';
 import { useRouter } from 'next/router';
 
 interface Props extends LinkProps {
@@ -14,7 +15,7 @@ export default function LinkTo({
   className = '', activeClassName, inactiveClassName,
   matchExact = false,
   ...anchorProps
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
   const router = useRouter();
 
   const isActive = router.asPath === href || (!matchExact && router.pathname.startsWith(href.toString()));
