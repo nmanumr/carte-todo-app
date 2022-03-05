@@ -1,3 +1,7 @@
+# Todo App
+
+A sample TODO app with django backend and react frontend. 
+
 ## How to run locally?
 
 * Create a new file `.env` and copy the content from `.env.example` 
@@ -11,7 +15,7 @@
     npm run dev
     ```
   This will run the nextjs development server.
-* 
+* Now open [localhost:3000](http://localhost:3000/) in your browser.
 
 ## Tech Stack
 
@@ -26,3 +30,5 @@
   * SWR (with Axios)
   * TailwindCss
   * Headless UI
+
+All the UI components are custom tailored and can be found in `ui/components/` directory.
