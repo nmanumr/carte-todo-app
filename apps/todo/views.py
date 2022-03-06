@@ -31,7 +31,7 @@ class ListCreateTaskApiView(GenericAPIView, ListCreateAPIView):
         labels = data.get('labels', [])
         labels = [models.TaskLabel.objects.get_or_create(title=l, user=self.request.user)[0].id for l in labels]
 
-        serializer.save(labels=labels)
+        serializer.save(labels=labels, user=self.request.user)
 
 
 class RetrieveUpdateDestroyTaskAPIView(GenericAPIView, RetrieveUpdateDestroyAPIView):
