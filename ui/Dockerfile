@@ -8,8 +8,6 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 COPY package*.json ./
-COPY next.config.js ./
-COPY public ./public
 RUN ls -alh
 
 RUN npm install
