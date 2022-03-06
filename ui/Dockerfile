@@ -8,6 +8,8 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 COPY package*.json ./
+COPY next.config.js ./
+COPY public ./
 
 RUN npm install
 
@@ -17,12 +19,11 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-RUN ls -alh
-COPY package.json ./
-COPY next.config.js ./
-COPY public ./
+#COPY --from=deps /app/node_modules ./node_modules
+COPY /next.config.js ./next.config.js
+COPY /public ./
 COPY --chown=nextjs:nodejs /.next ./
+RUN ls -alh
 
 ENV NODE_ENV production
 ENV PORT 3000
