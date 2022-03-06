@@ -1,17 +1,14 @@
+import useSWR from 'swr';
 import c from 'classnames';
-import React, { KeyboardEventHandler, useState } from 'react';
-import { ChevronDownIcon } from '@heroicons/react/solid';
 import { Combobox } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/solid';
+import React, { KeyboardEventHandler, useEffect, useState } from 'react';
 import useListState from '../hooks/use_list_state';
 
-const userLabels = [
-  'Cleaning',
-  'Room maintenance',
-  'Entertainment',
-  'Test Label',
-  'Test Label 2',
-  'Test Label 4',
-];
+interface Props {
+  onChange: (labels: string[]) => any;
+  labels: string[];
+}
 
 const CustomInput = React.forwardRef<HTMLInputElement, any>(({ onKeyDown, onEnter, ...props }, ref) => {
   const keyDownHandler = (e: any) => {
@@ -20,14 +17,29 @@ const CustomInput = React.forwardRef<HTMLInputElement, any>(({ onKeyDown, onEnte
     }
     onKeyDown(e);
   };
-  return <input {...props} ref={ref} onKeyDown={keyDownHandler} />;
+  return <input {...props} ref={ref} onKeyDown={keyDownHandler} autoComplete="off" />;
 });
 
-export default function LabelsInput() {
+export default function LabelsInput({ labels = [], onChange }: Props) {
   const [query, setQuery] = useState('');
   const [selectedLabels, handler] = useListState<string>([], true);
+  const { data: userLabels = [] } = useSWR('/api/todo/labels');
 
-  const onChange = (value: string) => {
+  useEffect(() => {
+    onChange(selectedLabels);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedLabels]);
+
+  useEffect(() => {
+    if (JSON.stringify(labels) === JSON.stringify(selectedLabels)) {
+      return;
+    }
+
+    handler.append(...labels.map((l) => l.trim()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [labels]);
+
+  const onComboOptionSelect = (value: string) => {
     if (!value) return;
 
     handler.append(value);
@@ -38,30 +50,34 @@ export default function LabelsInput() {
     setTimeout(() => {
       setQuery((val) => {
         if (!val) return val;
-        handler.append(val);
+        handler.append(val.trim());
         return '';
       });
     }, 100);
   };
 
-  let filteredPeople = query === ''
+  let filteredLabels = query === ''
     ? userLabels
-    : userLabels.filter((person) => person.toLowerCase().includes(query.toLowerCase()));
+    : userLabels.filter((l: string) => l.toLowerCase().includes(query.toLowerCase()));
 
-  filteredPeople = filteredPeople.filter((e) => !selectedLabels.includes(e));
+  filteredLabels = filteredLabels.filter((e: string) => !selectedLabels.includes(e));
 
   return (
-    <Combobox as="div" value={query} onChange={onChange}>
+    <Combobox as="div" value={query} onChange={onComboOptionSelect}>
       <Combobox.Label className="block text-sm font-medium text-gray-700">Labels</Combobox.Label>
       <div className="relative mt-1">
-        <div className="flex flex-wrap items-center border border-gray-300 rounded-md focus-within:border-green-700 focus-within:ring-1 focus-within:ring-green-700">
-          {selectedLabels.map((label) => (
-            <div
+        <div
+          className="flex flex-wrap items-center border border-gray-300 rounded-md focus-within:border-green-700 focus-within:ring-1 focus-within:ring-green-700"
+        >
+          {selectedLabels.map((label, i) => (
+            <button
               key={label}
-              className="px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-800 m-1"
+              type="button"
+              onClick={() => handler.remove(i)}
+              className="px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-800 m-1 hover:bg-red-400"
             >
               {label}
-            </div>
+            </button>
           ))}
 
           <div className="flex items-center min-w-[100px] grow">
@@ -80,20 +96,20 @@ export default function LabelsInput() {
           </div>
         </div>
 
-        {filteredPeople.length > 0 && (
+        {filteredLabels.length > 0 && (
           <Combobox.Options
             className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
-            {filteredPeople.map((person) => (
+            {filteredLabels.map((label: string) => (
               <Combobox.Option
-                key={person}
-                value={person}
+                key={label}
+                value={label}
                 className={({ active }) => c(
                   'relative cursor-default select-none py-2 pl-3 pr-9',
                   active ? 'bg-green-100 text-green-800' : 'text-gray-900',
                 )}
               >
-                <span className="block truncate">{person}</span>
+                <span className="block truncate">{label}</span>
               </Combobox.Option>
             ))}
           </Combobox.Options>

@@ -1,11 +1,61 @@
+import useSWR, { mutate } from 'swr';
+import Axios from 'axios';
 import React, { useState } from 'react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
+
+import {
+  LocalUserTask, Priority, RemoteResponse, RemoteUserTask,
+} from '../@types/task';
 import Button from '../components/Button';
+import EditCreateTaskModal from '../components/EditCreateTaskModal';
 import DashboardLayout from '../layouts/DashboardLayout';
-import AddTaskModal from '../components/AddTaskModal';
+
+function TaskListItem({ task, onEdit }: { task: RemoteUserTask, onEdit: (task: LocalUserTask) => any }) {
+  return (
+    <div key={task.publicId} className="rounded-md bg-white shadow flex items-center py-3 px-6 space-x-4">
+      <div className="grow">
+        <div className="w-full overflow-hidden text-ellipses">{task.title}</div>
+        <div className="flex flex-wrap text-sm">
+          {task.labels.map((l) => (
+            <div
+              key={l.publicId}
+              className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-200 text-gray-800 mt-2 mr-2 shrink-0"
+            >
+              {l.title}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="text-sm mr-6">
+        {/* @ts-ignore */}
+        {Priority[task.priority]}
+      </div>
+      <button
+        type="button" className="p-1"
+        onClick={() => {
+          const labels = task.labels.map((l) => l.title);
+          onEdit({ ...task, labels });
+        }}
+      >
+        <PencilIcon className="w-5 h-5 text-green-700" />
+      </button>
+      <button
+        type="button" className="p-1"
+        onClick={() => {
+          Axios.delete(`/api/todo/${task.publicId}`)
+            .then(() => mutate('/api/todo'));
+        }}
+      >
+        <TrashIcon className="w-5 h-5 text-red-700" />
+      </button>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [selectedTask, setSelected] = useState<LocalUserTask>();
+  const { data } = useSWR<RemoteResponse<RemoteUserTask>>('/api/todo');
 
   return (
     <DashboardLayout>
@@ -23,50 +73,28 @@ export default function HomePage() {
       </div>
 
       <div className="space-y-4">
-        <div className="rounded-md bg-white shadow flex items-center py-3 px-6 space-x-4">
-          <div className="grow">
-            <div className="w-full overflow-hidden text-ellipses">Set out garbage</div>
-            <div className="flex text-sm space-x-2 mt-2">
-              <div className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-200 text-gray-800">Cleaning</div>
-              <div className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-200 text-gray-800">
-                Room Maintenance
-              </div>
-            </div>
-          </div>
-          <div className="text-sm mr-6">
-            High
-          </div>
-          <button type="button" className="p-1">
-            <PencilIcon className="w-5 h-5 text-green-700" />
-          </button>
-          <button type="button" className="p-1">
-            <TrashIcon className="w-5 h-5 text-red-700" />
-          </button>
-        </div>
-
-        <div className="rounded-md bg-white shadow flex items-center py-3 px-6 space-x-4">
-          <div className="grow">
-            <div className="w-full overflow-hidden text-ellipses">Set out garbage</div>
-            <div className="flex text-sm space-x-2 mt-2">
-              <div className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-200 text-gray-800">Cleaning</div>
-              <div className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-200 text-gray-800">
-                Room Maintenance
-              </div>
-            </div>
-          </div>
-          <div className="text-sm mr-6">
-            High
-          </div>
-          <button type="button" className="p-1">
-            <PencilIcon className="w-5 h-5 text-green-700" />
-          </button>
-          <button type="button" className="p-1">
-            <TrashIcon className="w-5 h-5 text-red-700" />
-          </button>
-        </div>
+        {data?.results?.map((task) => (
+          <TaskListItem
+            key={task.publicId}
+            task={task}
+            onEdit={(t: LocalUserTask) => {
+              setSelected(t);
+              setAddModalOpen(true);
+            }}
+          />
+        ))}
       </div>
 
-      <AddTaskModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
+      <EditCreateTaskModal
+        isOpen={isAddModalOpen}
+        onClose={() => {
+          setAddModalOpen(false);
+          setTimeout(() => {
+            setSelected(undefined);
+          }, 300);
+        }}
+        selected={selectedTask}
+      />
     </DashboardLayout>
   );
 }

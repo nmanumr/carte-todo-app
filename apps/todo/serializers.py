@@ -4,23 +4,22 @@ from apps.todo.models import UserTask, TaskLabel
 
 
 class TaskLabelSerializer(serializers.ModelSerializer):
-    id = serializers.SerializerMethodField()
-
     class Meta:
         model = TaskLabel
-        fields = ('id', 'title')
-
-    def get_id(self, obj):
-        return obj.public_id
+        fields = ('public_id', 'title')
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    id = serializers.SerializerMethodField()
     labels = TaskLabelSerializer(many=True)
 
     class Meta:
         model = UserTask
-        fields = ('id', 'priority', 'labels')
+        fields = ('public_id', 'title', 'priority', 'labels')
 
-    def get_id(self, obj):
-        return obj.public_id
+
+class CreateTaskSerializer(serializers.ModelSerializer):
+    labels = serializers.ListField(child=serializers.CharField(), write_only=True)
+
+    class Meta:
+        model = UserTask
+        fields = ('title', 'priority', 'labels')
