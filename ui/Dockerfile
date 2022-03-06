@@ -18,9 +18,9 @@ RUN adduser -S nextjs -u 1001
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY /ui/next.config.js ./next.config.js
-COPY /ui/public ./public
-COPY --chown=nextjs:nodejs /ui/.next ./.next
+COPY next.config.js ./next.config.js
+COPY public ./public
+COPY --chown=nextjs:nodejs .next ./.next
 RUN ls -alh
 
 ENV NODE_ENV production

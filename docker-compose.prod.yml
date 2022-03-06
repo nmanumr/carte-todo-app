@@ -19,7 +19,7 @@ services:
       - backend
 
   server:
-    image: rashcam
+    image: todo
     build:
       context: .
       dockerfile: Dockerfile.prod
