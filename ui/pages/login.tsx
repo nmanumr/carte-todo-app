@@ -2,13 +2,13 @@ import Axios from 'axios';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
-import LinkTo from '../../components/LinkTo';
-import Button from '../../components/Button';
-import AuthLayout from '../../layouts/AuthLayout';
-import ErrorMessage from '../../components/ErrorMessage';
-import { isAuthenticated, setToken } from '../../providers/auth';
-import { Form } from '../../components/form';
-import InputFormField from '../../components/InputFormField';
+import LinkTo from '../components/LinkTo';
+import Button from '../components/Button';
+import AuthLayout from '../layouts/AuthLayout';
+import ErrorMessage from '../components/ErrorMessage';
+import { isAuthenticated, setToken } from '../providers/auth';
+import { Form } from '../components/form';
+import InputFormField from '../components/InputFormField';
 
 export default function Login() {
   const [apiError, setApiError] = useState<string>();
@@ -47,7 +47,7 @@ export default function Login() {
           <div className="text-sm">
             Don&apos;t have account?
             {' '}
-            <LinkTo href="/accounts/register" className="font-medium text-green-700 hover:text-green-800">
+            <LinkTo href="/register" className="font-medium text-green-700 hover:text-green-800">
               Goto Register
             </LinkTo>
           </div>

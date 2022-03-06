@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { UseFormReturn } from 'react-hook-form';
 
-import LinkTo from '../../components/LinkTo';
-import AuthLayout from '../../layouts/AuthLayout';
-import ErrorMessage from '../../components/ErrorMessage';
-import { isAuthenticated, setToken } from '../../providers/auth';
-import { Form } from '../../components/form';
-import Button from '../../components/Button';
-import InputFormField from '../../components/InputFormField';
+import LinkTo from '../components/LinkTo';
+import AuthLayout from '../layouts/AuthLayout';
+import ErrorMessage from '../components/ErrorMessage';
+import { isAuthenticated, setToken } from '../providers/auth';
+import { Form } from '../components/form';
+import Button from '../components/Button';
+import InputFormField from '../components/InputFormField';
 
 export default function Register() {
   const [apiError, setApiError] = useState<string>();
@@ -61,7 +61,7 @@ export default function Register() {
 
         <div className="flex items-center text-sm space-x-1">
           <span>Already have account?</span>
-          <LinkTo href="/accounts/login" className="font-medium text-green-700 hover:text-green-800">
+          <LinkTo href="/login" className="font-medium text-green-700 hover:text-green-800">
             Goto Login
           </LinkTo>
         </div>

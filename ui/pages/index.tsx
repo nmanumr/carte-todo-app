@@ -17,7 +17,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      router.replace('/accounts/login');
+      router.replace('/login');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

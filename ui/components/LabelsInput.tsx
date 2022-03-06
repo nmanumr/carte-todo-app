@@ -10,11 +10,9 @@ interface Props {
   labels: string[];
 }
 
-const CustomInput = React.forwardRef<HTMLInputElement, any>(({ onKeyDown, onEnter, ...props }, ref) => {
+const CustomInput = React.forwardRef<HTMLInputElement, any>(({ onKeyDown, onKeyDown2, ...props }, ref) => {
   const keyDownHandler = (e: any) => {
-    if (onEnter && e.key === 'Enter') {
-      onEnter(e);
-    }
+    onKeyDown2(e);
     onKeyDown(e);
   };
   return <input {...props} ref={ref} onKeyDown={keyDownHandler} autoComplete="off" />;
@@ -23,6 +21,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, any>(({ onKeyDown, onEnte
 export default function LabelsInput({ labels = [], onChange }: Props) {
   const [query, setQuery] = useState('');
   const [selectedLabels, handler] = useListState<string>([], true);
+  const [selectedLabel, setSelectedLabel] = useState<number>();
   const { data: userLabels = [] } = useSWR('/api/todo/labels/');
 
   useEffect(() => {
@@ -40,19 +39,34 @@ export default function LabelsInput({ labels = [], onChange }: Props) {
   }, [labels]);
 
   const onComboOptionSelect = (value: string) => {
-    if (!value) return;
+    if (!value.trim()) return;
 
-    handler.append(value);
+    handler.append(value.trim());
     setQuery('');
   };
 
-  const onEnter: KeyboardEventHandler<HTMLInputElement> = () => {
+  const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
     setTimeout(() => {
-      setQuery((val) => {
-        if (!val) return val;
-        handler.append(val.trim());
-        return '';
-      });
+      if (e.key === 'Enter') {
+        setQuery((val) => {
+          if (!val.trim()) return val;
+
+          handler.append(val.trim());
+          return '';
+        });
+      } else if (e.key === 'Backspace') {
+        setQuery((val) => {
+          if (val.trim()) return val;
+
+          if (typeof selectedLabel === 'number') {
+            handler.remove(selectedLabel);
+            setSelectedLabel(undefined);
+          } else if (selectedLabel === undefined && selectedLabels.length > 0) {
+            setSelectedLabel(selectedLabels.length - 1);
+          }
+          return '';
+        });
+      }
     }, 100);
   };
 
@@ -74,7 +88,10 @@ export default function LabelsInput({ labels = [], onChange }: Props) {
               key={label}
               type="button"
               onClick={() => handler.remove(i)}
-              className="px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-800 m-1 hover:bg-red-400"
+              className={c(
+                i === selectedLabel ? 'bg-red-300' : 'bg-gray-200',
+                'px-2.5 py-0.5 rounded-md text-sm font-medium m-1 text-gray-800 hover:bg-red-300',
+              )}
             >
               {label}
             </button>
@@ -83,7 +100,7 @@ export default function LabelsInput({ labels = [], onChange }: Props) {
           <div className="flex items-center min-w-[100px] grow">
             <Combobox.Input
               as={CustomInput}
-              onEnter={onEnter}
+              onKeyDown2={onKeyDown}
               placeholder="Enter a label and press enter"
               className="appearance-none shadow-sm border-none rounded-md block w-full px-3 py-2 placeholder-gray-400 sm:text-sm focus:z-10 focus:outline-none focus:ring-0"
               onChange={(event) => setQuery(event.target.value)}
