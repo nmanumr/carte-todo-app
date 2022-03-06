@@ -18,6 +18,7 @@ RUN adduser -S nextjs -u 1001
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+RUN ls -alh
 COPY package.json ./
 COPY next.config.js ./
 COPY public ./
