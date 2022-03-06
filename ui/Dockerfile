@@ -17,11 +17,11 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 WORKDIR /app
+RUN ls -alh
 COPY --from=deps /app/node_modules ./node_modules
 COPY next.config.js ./next.config.js
 COPY public ./public
 COPY --chown=nextjs:nodejs .next ./.next
-RUN ls -alh
 
 ENV NODE_ENV production
 ENV PORT 3000

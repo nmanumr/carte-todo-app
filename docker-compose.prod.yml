@@ -37,6 +37,8 @@ services:
 
   webapp:
     image: todo-ui
+    volumes:
+      - ./ui:/app
     build:
       context: ./ui
       dockerfile: Dockerfile
