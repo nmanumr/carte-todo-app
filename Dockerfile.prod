@@ -15,4 +15,4 @@ ENV PATH=/root/.local/bin:$PATH
 WORKDIR /todo
 COPY . .
 
-CMD python manage.py migrate; python manage.py collectstatic; daphne -b 0.0.0.0 -p 8000 todo.asgi:application
+CMD python manage.py migrate; python manage.py collectstatic --noinput; daphne -b 0.0.0.0 -p 8000 todo.asgi:application
