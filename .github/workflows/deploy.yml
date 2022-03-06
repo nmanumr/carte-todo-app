@@ -17,6 +17,7 @@ jobs:
           node-version: 16
       - run: cd ui && npm i
       - run: cd ui && npm run build
+      - run: touch ui/.next/.nojekyll
 
       - name: 🏗️ Populating Environment
         run: base64 -di <<< ${{ secrets.ENV_FILE_B64 }} > ${{ github.workspace }}/.env
