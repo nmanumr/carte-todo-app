@@ -18,10 +18,10 @@ RUN adduser -S nextjs -u 1001
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY /app/package.json ./package.json
+COPY /app/package.json ./
 COPY /app/next.config.js ./
-COPY /app/public ./public
-COPY --chown=nextjs:nodejs /app/.next ./.next
+COPY /app/public ./
+COPY --chown=nextjs:nodejs /app/.next ./
 
 ENV NODE_ENV production
 ENV PORT 3000
