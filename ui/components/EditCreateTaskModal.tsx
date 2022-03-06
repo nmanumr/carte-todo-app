@@ -29,14 +29,14 @@ export default function EditCreateTaskModal({ isOpen, onClose, selected }: Props
 
     let req;
     if (selected) {
-      req = Axios.put(`/api/todo/${selected.publicId}`, val);
+      req = Axios.put(`/api/todo/${selected.publicId}/`, val);
     } else {
-      req = Axios.post('/api/todo', val);
+      req = Axios.post('/api/todo/', val);
     }
 
     req
       .then(() => {
-        mutate('/api/todo');
+        mutate('/api/todo/');
         onClose();
       })
       .catch((e) => setError(e))

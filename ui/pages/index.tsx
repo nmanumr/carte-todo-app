@@ -12,7 +12,7 @@ import { LocalUserTask, RemoteResponse, RemoteUserTask } from '../@types/task';
 export default function HomePage() {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [selectedTask, setSelected] = useState<LocalUserTask>();
-  const { data } = useSWR<RemoteResponse<RemoteUserTask>>('/api/todo');
+  const { data } = useSWR<RemoteResponse<RemoteUserTask>>('/api/todo/');
   const router = useRouter();
 
   useEffect(() => {

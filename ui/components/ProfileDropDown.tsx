@@ -8,12 +8,12 @@ import { setToken } from '../providers/auth';
 import UserAvatar from './UserAvatar';
 
 export default function ProfileDropDown() {
-  const { data } = useSWR('/api/user/me');
+  const { data } = useSWR('/api/user/me/');
   const router = useRouter();
 
   const logout = async () => {
     setToken();
-    await router.push('/login');
+    await router.push('/accounts/login');
   };
 
   if (!data) {

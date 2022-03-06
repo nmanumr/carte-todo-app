@@ -23,7 +23,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, any>(({ onKeyDown, onEnte
 export default function LabelsInput({ labels = [], onChange }: Props) {
   const [query, setQuery] = useState('');
   const [selectedLabels, handler] = useListState<string>([], true);
-  const { data: userLabels = [] } = useSWR('/api/todo/labels');
+  const { data: userLabels = [] } = useSWR('/api/todo/labels/');
 
   useEffect(() => {
     onChange(selectedLabels);

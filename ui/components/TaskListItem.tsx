@@ -36,7 +36,7 @@ export default function TaskListItem({ task, onEdit }: { task: RemoteUserTask, o
       <button
         type="button" className="p-1"
         onClick={() => {
-          Axios.delete(`/api/todo/${task.publicId}`)
+          Axios.delete(`/api/todo/${task.publicId}/`)
             .then(() => mutate('/api/todo'));
         }}
       >
