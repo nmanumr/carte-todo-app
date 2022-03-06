@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import Button from '../components/Button';
@@ -15,9 +15,12 @@ export default function HomePage() {
   const { data } = useSWR<RemoteResponse<RemoteUserTask>>('/api/todo');
   const router = useRouter();
 
-  if (!isAuthenticated()) {
-    router.replace('/accounts/login');
-  }
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.replace('/accounts/login');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <DashboardLayout>

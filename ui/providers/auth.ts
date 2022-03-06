@@ -24,4 +24,4 @@ export const setToken = (token: string = '') => {
   savedAccessToken = token;
 };
 
-export const isAuthenticated = () => !!savedAccessToken;
+export const isAuthenticated = () => isBrowser && !!savedAccessToken;
