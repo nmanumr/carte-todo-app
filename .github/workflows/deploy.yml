@@ -22,7 +22,7 @@ jobs:
         run: base64 -di <<< ${{ secrets.ENV_FILE_B64 }} > ${{ github.workspace }}/.env
 
       - name: 🚀 Docker-Compose Remote Deployment
-        uses: nmanumr/github-action-ssh-docker-compose@master
+        uses: nmanumr/action-deploy-compose@master
         with:
           ssh_host: ${{ secrets.SSH_HOST }}
           ssh_user: ${{ secrets.SSH_USER }}
