@@ -12,11 +12,11 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 16
-      - run: cd ui && npm i
-      - run: cd ui && npm run build
+#      - uses: actions/setup-node@v1
+#        with:
+#          node-version: 16
+#      - run: cd ui && npm i
+#      - run: cd ui && npm run build
 
       - name: 🏗️ Populating Environment
         run: base64 -di <<< ${{ secrets.ENV_FILE_B64 }} > ${{ github.workspace }}/.env
