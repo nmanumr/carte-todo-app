@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import c from 'classnames';
 
 const buttonClassesMap = {
@@ -13,18 +13,16 @@ interface ButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes
   className?: string;
 }
 
-export default function Button({
+export default forwardRef<HTMLButtonElement, ButtonProps>(({
   className, kind = 'primary', loading, children, disabled, ...props
-}: ButtonProps) {
-  return (
-    // eslint-disable-next-line react/button-has-type
-    <button className={c(className, buttonClassesMap[kind])} disabled={disabled || loading} {...props}>
-      {loading && (
-        <div className="left-0 absolute w-full flex justify-center">
-          <div className="border-2 border-white/40 border-t-white w-5 h-5 rounded-full animate-spin" />
-        </div>
-      )}
-      <span className={loading ? 'opacity-0' : ''}>{children}</span>
-    </button>
-  );
-}
+}, ref) => (
+  // eslint-disable-next-line react/button-has-type
+  <button ref={ref} className={c(className, buttonClassesMap[kind])} disabled={disabled || loading} {...props}>
+    {loading && (
+    <div className="left-0 absolute w-full flex justify-center">
+      <div className="border-2 border-white/40 border-t-white w-5 h-5 rounded-full animate-spin" />
+    </div>
+    )}
+    <span className={loading ? 'opacity-0' : ''}>{children}</span>
+  </button>
+));

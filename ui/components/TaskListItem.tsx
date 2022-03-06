@@ -2,9 +2,12 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
 import Axios from 'axios';
 import { mutate } from 'swr';
 import React from 'react';
+import { useConfirmation } from './ConfirmationService';
 import { LocalUserTask, Priority, RemoteUserTask } from '../@types/task';
 
 export default function TaskListItem({ task, onEdit }: { task: RemoteUserTask, onEdit: (task: LocalUserTask) => any }) {
+  const confirm = useConfirmation();
+
   return (
     <div key={task.publicId} className="rounded-md bg-white shadow flex items-center py-3 px-6 space-x-4">
       <div className="grow">
@@ -36,8 +39,14 @@ export default function TaskListItem({ task, onEdit }: { task: RemoteUserTask, o
       <button
         type="button" className="p-1"
         onClick={() => {
-          Axios.delete(`/api/todo/${task.publicId}/`)
-            .then(() => mutate('/api/todo'));
+          confirm({
+            title: 'Are you sure?',
+            description: 'Do you really want delete this task?',
+            actionLabel: 'Confirm Delete',
+          })
+            .then((sure) => sure && Axios.delete(`/api/todo/${task.publicId}/`))
+            .then(() => mutate('/api/todo'))
+            .catch();
         }}
       >
         <TrashIcon className="w-5 h-5 text-red-700" />

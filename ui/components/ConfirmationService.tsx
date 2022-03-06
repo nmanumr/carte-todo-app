@@ -4,6 +4,7 @@ import React, {
   createContext, Fragment, useCallback, useContext, useRef, useState,
 } from 'react';
 import ErrorMessage from './ErrorMessage';
+import Button from "./Button";
 
 interface Options {
   callback?: () => Promise<any> | void;
@@ -120,26 +121,9 @@ export function ConfirmationServiceProvider({ children }: React.PropsWithChildre
                     </div>
                   </div>
                 </div>
-                <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                  <button
-                    type="button"
-                    disabled={loading}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={handleConfirm}
-                  >
-                    {loading ? (
-                      <div className="border-2 border-white/40 border-t-white w-5 h-5 rounded-full animate-spin" />
-                    ) : props && props.actionLabel}
-                  </button>
-                  <button
-                    type="button"
-                    disabled={loading}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                    onClick={handleCancel}
-                    ref={cancelButtonRef}
-                  >
-                    Cancel
-                  </button>
+                <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse space-x-2 space-x-reverse">
+                  <Button type="button" loading={loading} onClick={handleConfirm}>{props.actionLabel}</Button>
+                  <Button type="button" kind="secondary" onClick={handleCancel} ref={cancelButtonRef}>Cancel</Button>
                 </div>
               </div>
             </Transition.Child>
